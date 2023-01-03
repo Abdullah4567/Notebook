@@ -10,9 +10,9 @@ function App() {
     <>
       <Navbar />
       <Routes>
+        <Route exact path="/" element={<Error />} />
         <Route exact path="/Home" element={<Home />} />
         <Route exact path="/About" element={<About />} />
-        <Route exact path="/" element={<Error />} />
       </Routes>
     </>
   );
