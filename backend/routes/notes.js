@@ -22,7 +22,7 @@ router.get('/allnotes', getUserId, async (req, res) => {
 })
 
 // add note via Post request : "/api/notes/addnote"  login required
-router.get('/addnote', getUserId, [
+router.post('/addnote', getUserId, [
     body('title', 'title should not be empty')?.trim()?.isLength({ min: 3 }),
     body('description', 'description should not be empty')?.trim().isLength({ min: 3 }),
 ], async (req, res) => {
@@ -119,13 +119,19 @@ router.delete('/deletenote/:id', getUserId, async (req, res) => {
                 }));
             }
             else {
-                res.status(400).send("Note not Found")
+                res.status(400).json({
+                    success: false,
+                    message: "Note not Found"
+                })
             }
 
         }
         else {
             return (
-                res.status(400).send("Note not Found")
+                res.status(400).json({
+                    success: false,
+                    message: "Note not Found"
+                })
             )
         }
     } catch (error) {
