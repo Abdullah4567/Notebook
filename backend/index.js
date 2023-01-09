@@ -1,9 +1,10 @@
 const connectToMongo = require('./DbConnectivity/Db');
 const express = require('express');
+const cors = require('cors')
+const app = express();
 connectToMongo();
 
-
-const app = express();
+app.use(cors())
 const port = 5000;
 app.use(express.json()); // middleware for use of json
 

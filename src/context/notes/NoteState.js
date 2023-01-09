@@ -1,90 +1,39 @@
 import NoteContext from './NoteContext';
 import React, { useState } from 'react'
+import client from '../../axios/Client';
 
 const NoteState = (props) => {
-    const initial = [{
-        "_id": "63538ab593fe0292045fa3b",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is first title",
-        "description": "This is first description",
-        "createdAt": "2023-01-04T08:28:27.321Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b5393675fe3a1ec7a3122",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is second title",
-        "description": "This is second description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b539675fe3a1ec7a312b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is third title",
-        "description": "This is third description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b5393675fe3a1e7a312b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is 4th title",
-        "description": "This is 4th description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b5393675fe3a1ec7a32b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is 5th title",
-        "description": "This is 5th description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b539375fe3a1ec7a312b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is 6th title",
-        "description": "This is 6th description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b5393675f3a1ec7a312b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is 7th title",
-        "description": "This is fir7thst description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    },
-    {
-        "_id": "63b593675fe3a1ec7a312b2",
-        "userId": "63b5356dd7960e4f20b3bab6",
-        "title": "This is 8th title",
-        "description": "This is 8th description",
-        "createdAt": "2023-01-04T08:30:46.044Z",
-        "__v": 0
-    }]
+    const initial = []
     const [notes, setnotes] = useState(initial)
-    const addNewNote = (note) => {
-        const newNote = {
-            "_id": "3b59675fe3a1ec7a312b2",
-            "userId": "63b5356dd7960e4f20b3bab6",
-            "title": note.title,
-            "description": note.description,
-            "createdAt": "2023-01-04T08:30:46.044Z",
-            "__v": 0
-        }
-
-        setnotes(notes.concat(newNote))
+    const headers = {
+        'Content-Type': 'application/json',
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjUzNTZkZDc5NjBlNGYyMGIzYmFiNiIsImlhdCI6MTY3MjgyMDA3OH0.FUp9c1-2KfWv5FrjCg7Xxj5rI8RIInUhf25wkh-Xl9Y'
     }
-    const deleteNote = (id) => {
+    const addNewNote = async (note) => {
+        return (await client.post('/notes/addnote', {
+            title: note.title,
+            description: note.description
+        }, { headers }).then((res) => {
+            // console.log("data", res.data);
+            setnotes(notes.concat(res.data.newNote))
+            return res.data;
+        }).catch((err) => {
+            console.log(err.response)
+            return err.response.data;
+        }))
+    }
+    const deleteNote = async (id) => {
         console.log(id);
-        const newNotes = notes.filter((note) => {
-            return note._id !== id
-        })
-        setnotes(newNotes)
+        return (await client.delete(`notes/deletenote/${id}`, { headers }).then((res) => {
+            const newNotes = notes.filter((note) => {
+                return note._id !== id
+            })
+            setnotes(newNotes);
+            console.log(res.data)
+        }).catch((err) => {
+            console.log(err.response)
+            return err.response.data;
+        }))
 
     }
     const markAsImportant = (id) => {
@@ -107,8 +56,18 @@ const NoteState = (props) => {
         newNotes.push(importantNote);
         setnotes(newNotes);
     }
+    const fetchNotes = async () => {
+        return (await client.get('/notes/allnotes', { headers }).then((res) => {
+            // console.log(res.data.notes);
+            setnotes(res.data.notes);
+            return res.data;
+        }).catch((err) => {
+            console.log(err.response)
+            return err.response.data
+        }))
+    }
     return (
-        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, markAsImportant, markAsOrdinary }}>
+        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, markAsImportant, markAsOrdinary, fetchNotes }}>
             {props.children}
         </NoteContext.Provider >
     )
