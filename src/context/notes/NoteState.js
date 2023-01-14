@@ -36,6 +36,24 @@ const NoteState = (props) => {
         }))
 
     }
+
+    const updateNote = async (targetNote) => {
+        // console.log(id);
+        return (await client.put(`notes/updatenote/${targetNote.id}`, {
+            title: targetNote.title,
+            description: targetNote.description
+        }, { headers }).then((res) => {
+            console.log(res.data)
+        }).catch((err) => {
+            console.log(err.response)
+            return err.response.data;
+        }))
+
+    }
+
+
+
+
     const markAsImportant = (id) => {
         const newNotes = notes.filter((note) => {
             return note._id !== id
@@ -67,7 +85,7 @@ const NoteState = (props) => {
         }))
     }
     return (
-        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, markAsImportant, markAsOrdinary, fetchNotes }}>
+        <NoteContext.Provider value={{ notes, addNewNote, deleteNote, markAsImportant, markAsOrdinary, fetchNotes, updateNote }}>
             {props.children}
         </NoteContext.Provider >
     )

@@ -82,7 +82,7 @@ router.put('/updatenote/:id', [
                 note = await Notes.findByIdAndUpdate(noteId, { $set: updatednote });
                 res.status(200).json({
                     success: true,
-                    updatednote
+                    // updatednote
                 })
 
             }

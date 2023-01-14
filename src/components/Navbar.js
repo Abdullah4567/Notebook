@@ -8,7 +8,8 @@ const Navbar = () => {
     }, [location])
     return (
         <>
-            <nav className="navbar navbar-light bg-secondary sticky-top navbar-expand-lg">
+            {/* sticky-top */}
+            <nav className="navbar navbar-light bg-secondary  navbar-expand-lg">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">NoteBook</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

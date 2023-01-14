@@ -22,11 +22,13 @@ const NotesItem = (props) => {
                         <i className="fa-solid fa-trash" style={deleteStyle} onClick={() => {
                             deleteNote(props.id)
                         }}></i>
-                        <i className="fa-regular fa-pen-to-square" style={editStyle}></i>
+                        <i className="fa-regular fa-pen-to-square" style={editStyle} onClick={() => {
+                            props.editNote(props.id)
+                        }}></i>
                     </div>
                     <div className="d-flex justify-content-around mt-1">
-                        <p className="fw-light fs-6 mt-1 ps-1" style={{ marginBottom: "1px" }}>Mark as important </p>
-                        <div className="form-check form-switch  mt-2">
+                        <p className="fw-light fs-10 mt-3 ps-1" style={{ marginBottom: "-30px" }}>Mark as important </p>
+                        <div className="form-check form-switch  mt-3">
                             <input className="form-check-input" type="checkbox" id="markAsImportant" onClick={(e) => {
                                 e.target.checked ? markAsImportant(props.id) : markAsOrdinary(props.id)
                             }} />
