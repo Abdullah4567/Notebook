@@ -4,7 +4,7 @@ const getUserId = (req, res, next) => {
 
     try {
         const token = req.header('auth-token');
-        // console.log(token);
+        // console.log("In backend ", token);
         if (token) {
             const userId = jwt.verify(token, KEY);
             req.userId = userId;

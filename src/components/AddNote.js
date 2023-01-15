@@ -11,7 +11,7 @@ const AddNote = () => {
     const handleClick = async (e) => {
         e.preventDefault();
         await addNewNote(note);
-        setNote({ title: "", description: "" });
+        // setNote({ title: "", description: "" });
     }
     return (
         <div>

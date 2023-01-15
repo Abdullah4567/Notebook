@@ -7,6 +7,7 @@ import Error from './components/Error';
 import NoteState from './context/notes/NoteState';
 import Login from './components/Login';
 import AuthState from './context/auth/AuthState';
+import SignUp from './components/SignUp';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route exact path="/" element={<Home />} />
             <Route exact path="/About" element={<About />} />
             <Route exact path="/login" element={<Login />} />
+            <Route exact path="/sign-up" element={<SignUp />} />
           </Routes>
         </div>
       </NoteState>

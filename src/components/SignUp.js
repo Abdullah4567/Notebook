@@ -2,33 +2,35 @@ import React, { useState, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../context/auth/AuthContext'
 
-const Login = () => {
-    const { setLoggedIn, validateLogin } = useContext(AuthContext);
+const SignUp = () => {
+    const { setLoggedIn, validateLogin, createUser } = useContext(AuthContext);
     const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target.email.value);
-        console.log(e.target.password.value);
-        const res = await validateLogin(e.target.email.value, e.target.password.value)
+        let { name, email, password, age } = e.target;
+        name = name.value;
+        email = email.value;
+        password = password.value;
+        age = age.value;
+        const res = await createUser(name, email, password, age)
         if (res.success) {
-            // Login Successfull
-            console.log(res.success);
+            // sign-up Successfull
+            // console.log(res.success);
             setLoggedIn(true);
             navigate('/')
-
         }
         else {
-            // Login Unsuccessfull
+            // sign-up Unsuccessfull
             setLoggedIn(false);
-            console.log(res.message)
+            // console.log(res.message)
         }
     }
     return (
         <div>
             <section className="">
-                <div className="container py-5 h-100">
+                <div className="container py-4 h-100">
                     <p className="text-center fs-1 text-info">Welcome to NoteBook</p>
                     <div className="row d-flex align-items-center justify-content-center h-100">
                         <div className="col-md-8 col-lg-7 col-xl-6">
@@ -38,12 +40,24 @@ const Login = () => {
                         <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
                             <form onSubmit={handleSubmit}>
                                 <div className="form-outline mb-4">
-                                    <input type="email" id="email" className="form-control form-control-lg" required />
+                                    <div className='d-flex'>
+                                        <div className="">
+                                            <input type="text" id="name" className="form-control w-auto" required minLength={3} />
+                                            <label className="form-label" htmlFor="name">User Name</label>
+                                        </div>
+                                        <div className="mx-3">
+                                            <input type="number" id="age" className="form-control w-auto" required min={10} max={50} />
+                                            <label className="form-label" htmlFor="age">Age </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-outline mb-4">
+                                    <input type="email" id="email" className="form-control" required />
                                     <label className="form-label" htmlFor="email">Email address</label>
                                 </div>
 
                                 <div className="form-outline mb-4">
-                                    <input type="password" ref={ref} id="password" className="form-control form-control-lg" required />
+                                    <input type="password" ref={ref} id="password" className="form-control" required />
                                     <label className="form-label" htmlFor="password">Password</label>
                                     {showPassword ? (<i className=" mx-2 fa-regular fa-eye-slash" onClick={() => {
                                         setshowPassword(false)
@@ -61,7 +75,8 @@ const Login = () => {
                                     <a href="#!">Forgot password?</a>
                                 </div> */}
 
-                                <button type="submit" className="btn btn-primary btn-lg btn-block">Sign in</button>
+                                <button type="submit" className="btn btn-primary btn-block">
+                                    Create an Account</button>
 
                                 <div className="divider d-flex align-items-center my-4">
                                     <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
@@ -73,7 +88,9 @@ const Login = () => {
                                 </button>
                                 <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}
                                     role="button">
-                                    <i className="fab fa-twitter me-2"></i>Continue with Twitter</button>
+                                    <i className="fab fa-twitter me-2"></i>
+                                    Continue with Twitter
+                                </button>
 
                             </form>
                         </div>
@@ -84,4 +101,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default SignUp
