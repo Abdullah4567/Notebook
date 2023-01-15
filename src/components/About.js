@@ -1,10 +1,11 @@
 import React from 'react'
+import NotesLayout from '../layouts/NotesLayout'
 
 const About = () => {
     return (
-        <div>
+        <NotesLayout>
             This is About
-        </div>
+        </NotesLayout>
     )
 }
 

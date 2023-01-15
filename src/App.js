@@ -8,22 +8,17 @@ import NoteState from './context/notes/NoteState';
 import Login from './components/Login';
 import AuthState from './context/auth/AuthState';
 import SignUp from './components/SignUp';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
   return (
     <AuthState>
       <NoteState>
-        <Navbar />
-        <div className="container">
-          <Routes>
-            {/* for route not found use '*' */}
-            <Route exact path="*" element={<Error />} />
-            <Route exact path="/" element={<Home />} />
-            <Route exact path="/About" element={<About />} />
-            <Route exact path="/login" element={<Login />} />
-            <Route exact path="/sign-up" element={<SignUp />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/sign-up" element={<SignUp />} />
+        </Routes>
+        <AppRoutes />
       </NoteState>
     </AuthState>
   );
