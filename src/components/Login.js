@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../context/auth/AuthContext'
 
 const Login = () => {
     const { setLoggedIn, validateLogin } = useContext(AuthContext);
+    const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false)
     const handleSubmit = async (e) => {
@@ -41,9 +42,15 @@ const Login = () => {
                                 </div>
 
                                 <div className="form-outline mb-4">
-                                    <input type="password" id="password" className="form-control form-control-lg" required />
-                                    <label className="form-label" htmlFor="password">Password</label>
-
+                                    <input type="password" ref={ref} id="password" className="form-control form-control-lg" required />
+                                    <label className="form-label" style={{ border: '2px black solid' }} htmlFor="password">Password</label>
+                                    {showPassword ? (<i className=" mx-2 fa-regular fa-eye-slash" onClick={() => {
+                                        setshowPassword(false)
+                                        ref.current.type = "password"
+                                    }}></i>) : (<i className=" mx-2 fa-regular fa-eye" onClick={() => {
+                                        setshowPassword(true)
+                                        ref.current.type = "text"
+                                    }}></i>)}
                                 </div>
                                 {/* <div className="d-flex justify-content-around align-items-center mb-4">
                                     <div className="form-check">
@@ -70,7 +77,7 @@ const Login = () => {
                             </form>
                         </div>
                     </div>
-                </div>
+                </div >
             </section >
         </div >
     )
