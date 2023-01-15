@@ -39,8 +39,12 @@ const AuthState = (props) => {
             return err.response.data;
         }))
     }
+    const Logout = () => {
+        localStorage.removeItem('token');
+        setLoggedIn(false);
+    }
     return (
-        <AuthContext.Provider value={{ LoggedIn, setLoggedIn, validateLogin, createUser }}>
+        <AuthContext.Provider value={{ LoggedIn, setLoggedIn, validateLogin, createUser, Logout }}>
             {props.children}
         </AuthContext.Provider >
     )

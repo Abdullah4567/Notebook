@@ -13,7 +13,7 @@ function App() {
   return (
     <AuthState>
       <NoteState>
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="container">
           <Routes>
             {/* for route not found use '*' */}

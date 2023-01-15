@@ -9,20 +9,17 @@ const Login = () => {
     const [showPassword, setshowPassword] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target.email.value);
-        console.log(e.target.password.value);
         const res = await validateLogin(e.target.email.value, e.target.password.value)
         if (res.success) {
             // Login Successfull
-            console.log(res.success);
+            // console.log(res.success);
             setLoggedIn(true);
             navigate('/')
-
         }
         else {
             // Login Unsuccessfull
             setLoggedIn(false);
-            console.log(res.message)
+            // console.log(res.message)
         }
     }
     return (

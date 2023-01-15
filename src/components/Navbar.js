@@ -1,11 +1,18 @@
-import { React, useEffect } from 'react'
-import { Link, useLocation } from "react-router-dom";
+import { React, useEffect, useContext } from 'react'
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import AuthContext from '../context/auth/AuthContext';
 
 const Navbar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { LoggedIn, Logout } = useContext(AuthContext)
     useEffect(() => {
         // console.log(location);
     }, [location])
+    const handleLogout = () => {
+        Logout();
+        navigate('/login');
+    }
     return (
         <>
             {/* sticky-top */}
@@ -26,7 +33,8 @@ const Navbar = () => {
                         </ul>
                         <form className="d-flex" role="search">
                             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
+                            <button className="btn btn-info mx-2" type="submit">Search</button>
+                            {LoggedIn && <button className="btn btn-primary" onClick={handleLogout}>Logout</button>}
                         </form>
                     </div>
                 </div>
