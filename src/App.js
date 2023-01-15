@@ -1,8 +1,5 @@
 import './App.css';
-import Navbar from './components/Navbar';
 import { Routes, Route } from "react-router-dom";
-import About from './components/About';
-import Home from './components/Home';
 import Error from './components/Error';
 import NoteState from './context/notes/NoteState';
 import Login from './components/Login';
@@ -17,6 +14,8 @@ function App() {
         <Routes>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/sign-up" element={<SignUp />} />
+          {/* <Route exact path="*" element={<Error />} /> */}
+          {/* for route not found use '*' */}
         </Routes>
         <AppRoutes />
       </NoteState>
