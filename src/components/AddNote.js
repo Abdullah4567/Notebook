@@ -1,10 +1,13 @@
 import React, { useState, useContext } from 'react'
+import useSound from 'use-sound';
 import context from '../context/notes/NoteContext';
 import AlertContext from '../context/alert/AlertContext';
+import addNoteSound from '../assests/addNoteSound.wav'
 
 const AddNote = () => {
     const { addNewNote } = useContext(context);
     const { showAlert } = useContext(AlertContext)
+    const [play] = useSound(addNoteSound);
     const [note, setNote] = useState({ title: "", description: "" });
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value });
@@ -20,6 +23,8 @@ const AddNote = () => {
             if (res.success) {
                 showAlert("Note Added successfully", "success")
                 setNote({ title: "", description: "" });
+
+                play();
             }
             else {
                 showAlert(res.message, "danger")
