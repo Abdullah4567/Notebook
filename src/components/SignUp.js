@@ -4,7 +4,7 @@ import AuthContext from '../context/auth/AuthContext'
 import AlertContext from '../context/alert/AlertContext'
 
 const SignUp = () => {
-    const { setLoggedIn, validateLogin, createUser } = useContext(AuthContext);
+    const { setLoggedIn, createUser } = useContext(AuthContext);
     const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
@@ -12,23 +12,28 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         let { name, email, password, age } = e.target;
-        name = name.value;
+        name = name.value.trim();
         email = email.value;
-        password = password.value;
+        password = password.value.trim();
         age = age.value;
-        const res = await createUser(name, email, password, age)
-        if (res.success) {
-            // sign-up Successfull
-            // console.log(res.success);
-            showAlert("Account Created Successfully", "success");
-            setLoggedIn(true);
-            navigate('/')
+        if (name.length > 0 && password.length > 0) {
+            const res = await createUser(name, email, password, age)
+            if (res.success) {
+                // sign-up Successfull
+                // console.log(res.success);
+                showAlert("Account Created Successfully", "success");
+                setLoggedIn(true);
+                navigate('/')
+            }
+            else {
+                // sign-up Unsuccessfull
+                showAlert(res.message, "danger");
+                setLoggedIn(false);
+                // console.log(res.message)
+            }
         }
         else {
-            // sign-up Unsuccessfull
-            showAlert(res.message, "danger");
-            setLoggedIn(false);
-            // console.log(res.message)
+            showAlert("Name or password should of minimum 3 characters", "danger")
         }
     }
     return (

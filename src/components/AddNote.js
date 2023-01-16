@@ -11,13 +11,22 @@ const AddNote = () => {
     }
     const handleClick = async (e) => {
         e.preventDefault();
-        const res = await addNewNote(note);;
-        if (res.success) {
-            showAlert("Note Added successfully", "success")
-            setNote({ title: "", description: "" });
+        setNote({
+            title: note.title.trim(),
+            description: note.description.trim()
+        });
+        if (note.title.length > 3 && note.description.length > 5) {
+            const res = await addNewNote(note);;
+            if (res.success) {
+                showAlert("Note Added successfully", "success")
+                setNote({ title: "", description: "" });
+            }
+            else {
+                showAlert(res.message, "danger")
+            }
         }
         else {
-            showAlert(res.message, "danger")
+            showAlert("Title or description should be 5 characters lengthy", "danger")
         }
     }
     return (
