@@ -30,6 +30,7 @@ const NoteState = (props) => {
             })
             setnotes(newNotes);
             // console.log(res.data)
+            return res.data;
         }).catch((err) => {
             console.log(err.response)
             return err.response.data;
@@ -43,7 +44,8 @@ const NoteState = (props) => {
             title: targetNote.title,
             description: targetNote.description
         }, { headers }).then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
+            return res.data;
         }).catch((err) => {
             console.log(err.response)
             return err.response.data;

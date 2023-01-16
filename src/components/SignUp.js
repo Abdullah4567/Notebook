@@ -1,9 +1,11 @@
 import React, { useState, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from '../context/auth/AuthContext'
+import AlertContext from '../context/alert/AlertContext'
 
 const SignUp = () => {
     const { setLoggedIn, validateLogin, createUser } = useContext(AuthContext);
+    const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false)
@@ -18,11 +20,13 @@ const SignUp = () => {
         if (res.success) {
             // sign-up Successfull
             // console.log(res.success);
+            showAlert("Account Created Successfully", "success");
             setLoggedIn(true);
             navigate('/')
         }
         else {
             // sign-up Unsuccessfull
+            showAlert(res.message, "danger");
             setLoggedIn(false);
             // console.log(res.message)
         }
@@ -57,7 +61,7 @@ const SignUp = () => {
                                 </div>
 
                                 <div className="form-outline mb-4">
-                                    <input type="password" ref={ref} id="password" className="form-control" required />
+                                    <input type="password" ref={ref} id="password" className="form-control" required minLength={3} />
                                     <label className="form-label" htmlFor="password">Password</label>
                                     {showPassword ? (<i className=" mx-2 fa-regular fa-eye-slash" onClick={() => {
                                         setshowPassword(false)

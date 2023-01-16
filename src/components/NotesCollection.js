@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState, useRef } from 'react'
 import context from '../context/notes/NoteContext';
 import Modal from './Modal';
 import NotesItem from './NotesItem';
+import AlertContext from '../context/alert/AlertContext';
 
 const NotesCollection = () => {
     const notesContext = useContext(context);
     const { notes, fetchNotes, updateNote } = notesContext;
+    const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const [editNote, seteditNote] = useState({
         id: null,
@@ -31,8 +33,14 @@ const NotesCollection = () => {
         ref.current.click(); // Opening Modal for edit Note
     }
     const saveEditChanges = async () => {
-        await updateNote(editNote);
-        fetchNotes();
+        const res = await updateNote(editNote);
+        if (res.success) {
+            fetchNotes();
+            showAlert("Note updated successfully", "success")
+        }
+        else {
+            showAlert(res.message, "danger")
+        }
     }
     const nonotefound =
         <div className='text-center fs-1  p-3 text-danger'>

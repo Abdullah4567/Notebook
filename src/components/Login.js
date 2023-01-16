@@ -1,9 +1,12 @@
+import Alert from './Alerts';
 import React, { useState, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AlertContext from '../context/alert/AlertContext';
 import AuthContext from '../context/auth/AuthContext'
 
 const Login = () => {
     const { setLoggedIn, validateLogin } = useContext(AuthContext);
+    const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false)
@@ -13,17 +16,19 @@ const Login = () => {
         if (res.success) {
             // Login Successfull
             // console.log(res.success);
+            showAlert("Login Successfull", "success");
             setLoggedIn(true);
             navigate('/')
         }
         else {
             // Login Unsuccessfull
             setLoggedIn(false);
+            showAlert(res.message, "danger");
             // console.log(res.message)
         }
     }
     return (
-        <div>
+        <>
             <section className="">
                 <div className="container py-5 h-100">
                     <p className="text-center fs-1 text-info">Welcome to NoteBook</p>
@@ -40,7 +45,7 @@ const Login = () => {
                                 </div>
 
                                 <div className="form-outline mb-4">
-                                    <input type="password" ref={ref} id="password" className="form-control form-control-lg" required />
+                                    <input type="password" ref={ref} id="password" className="form-control form-control-lg" required minLength={3} />
                                     <label className="form-label" htmlFor="password">Password</label>
                                     {showPassword ? (<i className=" mx-2 fa-regular fa-eye-slash" onClick={() => {
                                         setshowPassword(false)
@@ -77,7 +82,7 @@ const Login = () => {
                     </div>
                 </div >
             </section >
-        </div >
+        </ >
     )
 }
 

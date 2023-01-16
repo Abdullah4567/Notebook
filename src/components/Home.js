@@ -6,10 +6,15 @@ import NotesCollection from './NotesCollection';
 import AuthContext from '../context/auth/AuthContext';
 
 const Home = () => {
-    const { LoggedIn } = useContext(AuthContext);
+    const { setLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect(() => {
-        !LoggedIn && navigate('/login')
+        if (localStorage.getItem('token') === null) {
+            navigate('/login')
+        }
+        else {
+            setLoggedIn(true)
+        }
     }, [])
 
     return (

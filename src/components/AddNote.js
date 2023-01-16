@@ -1,17 +1,24 @@
 import React, { useState, useContext } from 'react'
 import context from '../context/notes/NoteContext';
+import AlertContext from '../context/alert/AlertContext';
 
 const AddNote = () => {
-    const notesContext = useContext(context);
-    const { addNewNote } = notesContext;
+    const { addNewNote } = useContext(context);
+    const { showAlert } = useContext(AlertContext)
     const [note, setNote] = useState({ title: "", description: "" });
     const onChange = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value });
     }
     const handleClick = async (e) => {
         e.preventDefault();
-        await addNewNote(note);
-        // setNote({ title: "", description: "" });
+        const res = await addNewNote(note);;
+        if (res.success) {
+            showAlert("Note Added successfully", "success")
+            setNote({ title: "", description: "" });
+        }
+        else {
+            showAlert(res.message, "danger")
+        }
     }
     return (
         <div>
