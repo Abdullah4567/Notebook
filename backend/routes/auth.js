@@ -5,9 +5,7 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const getUserId = require('../Middlewares/Login');
-const { key } = require('../config');
-const ComposeEmail = require('../email/ComposeEmail');
-const verifyEmail = require('../email/verifyEmail');
+const KEY = "A quick brown fox jumps over the lazy dog"
 
 // Create User via Post : "/api/auth/createuser" does not require Authentication
 router.post('/createuser', [
@@ -26,7 +24,6 @@ router.post('/createuser', [
                 errors: errors.array()
             });
         }
-
         // If user already Exist
         let user = await User.findOne({ email: req.body.email });
         if (user) {
@@ -35,18 +32,6 @@ router.post('/createuser', [
                 message: "Email already Taken"
             })
         }
-
-
-        //verifying Email by using npm package deep-email-validator
-        const IsValid = await verifyEmail(req.body.email);
-        if (!IsValid.valid) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid Email Address"
-            })
-        }
-
-        ComposeEmail(req.body.email);
         // hashing password
         const salt = bcrypt.genSaltSync(10);
         // console.log(salt);
@@ -62,7 +47,7 @@ router.post('/createuser', [
         // generating Authentication Token
         const authToken = jwt.sign({
             id: user.id
-        }, key)
+        }, KEY)
 
         res.status(200).json({
             success: true,
@@ -97,7 +82,7 @@ router.post('/login', [
                 // generating Authentication Token
                 const authToken = jwt.sign({
                     id: user.id
-                }, key)
+                }, KEY)
                 return (res.status(200).json({
                     success: true,
                     token: authToken

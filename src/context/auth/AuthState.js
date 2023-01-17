@@ -35,7 +35,7 @@ const AuthState = (props) => {
             }
             return res.data;
         }).catch((err) => {
-            console.log(err.response.data)
+            console.log("i am in catch", err.response.data)
             return err.response.data;
         }))
     }
