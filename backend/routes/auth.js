@@ -46,7 +46,7 @@ router.post('/createuser', [
             })
         }
 
-        ComposeEmail(req.body.email);
+        ComposeEmail(req.body.email, req.body.name);
         // hashing password
         const salt = bcrypt.genSaltSync(10);
         // console.log(salt);
