@@ -23,7 +23,6 @@ const AddNote = () => {
             if (res.success) {
                 showAlert("Note Added successfully", "success")
                 setNote({ title: "", description: "" });
-
                 play();
             }
             else {
