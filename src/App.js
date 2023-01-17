@@ -1,6 +1,5 @@
 import './App.css';
 import { Routes, Route } from "react-router-dom";
-import Error from './components/Error';
 import NoteState from './context/notes/NoteState';
 import Login from './components/Login';
 import AuthState from './context/auth/AuthState';

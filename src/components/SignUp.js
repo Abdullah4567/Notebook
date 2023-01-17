@@ -44,7 +44,7 @@ const SignUp = () => {
                     <div className="row d-flex align-items-center justify-content-center h-100">
                         <div className="col-md-8 col-lg-7 col-xl-6">
                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-                                className="img-fluid" alt="Phone image" />
+                                className="img-fluid" alt="not found" />
                         </div>
                         <div className="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
                             <form onSubmit={handleSubmit}>
@@ -95,8 +95,7 @@ const SignUp = () => {
                                 >
                                     <i className="fab fa-facebook-f me-2"></i>Continue with Facebook
                                 </button>
-                                <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}
-                                    role="button">
+                                <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}>
                                     <i className="fab fa-twitter me-2"></i>
                                     Continue with Twitter
                                 </button>

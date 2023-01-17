@@ -15,6 +15,7 @@ const Home = () => {
         else {
             setLoggedIn(true)
         }
+        // eslint-disable-next-line
     }, [])
 
     return (
