@@ -57,7 +57,7 @@ const AuthState = (props) => {
             return err.response.data;
         }))
     }
-    const createUser = async (name, email, password, age) => {
+    const createUser = async (name, email, password, age, picture) => {
         return await (client.post('/auth/createuser', {
             name: name,
             email: email,
@@ -73,7 +73,7 @@ const AuthState = (props) => {
                         name: name,
                         age: age,
                         email: email,
-                        profilePicture: null,
+                        profilePicture: picture,
                     }
                 })
 

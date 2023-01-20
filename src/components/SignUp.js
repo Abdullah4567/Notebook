@@ -11,18 +11,19 @@ const SignUp = () => {
     const [showPassword, setshowPassword] = useState(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let { name, email, password, age } = e.target;
+        let { name, email, password, age, picture } = e.target;
         name = name.value.trim();
         email = email.value;
         password = password.value.trim();
         age = age.value;
+        picture = picture.files[0];
         if (name.length > 0 && password.length > 0) {
             //displaying Loader
             const element = document.getElementById('sign-up').childNodes;
             element[0].classList.remove('d-none')
             element[1].textContent = "Loading...";
 
-            const res = await createUser(name, email, password, age)
+            const res = await createUser(name, email, password, age, picture)
             if (res.success) {
                 // sign-up Successfull
                 // console.log(res.success);
@@ -68,7 +69,7 @@ const SignUp = () => {
                                     <label className="form-label" htmlFor="email">Email address</label>
                                 </div>
 
-                                <div className="form-outline mb-4">
+                                <div className="form-outline mb-1">
                                     <input type="password" ref={ref} id="password" className="form-control" required minLength={3} />
                                     <label className="form-label" htmlFor="password">Password</label>
                                     {showPassword ? (<i className=" mx-2 fa-regular fa-eye-slash" onClick={() => {
@@ -79,19 +80,16 @@ const SignUp = () => {
                                         ref.current.type = "text"
                                     }}></i>)}
                                 </div>
-                                {/* <div className="d-flex justify-content-around align-items-center mb-4">
-                                    <div className="form-check">
-                                        <input className="form-check-input" type="checkbox" value="" id="form1Example3" checked />
-                                        <label className="form-check-label" htmlhtmlFor="form1Example3"> Remember me </label>
-                                    </div>
-                                    <a href="#!">Forgot password?</a>
-                                </div> */}
+                                <div className="d-flex justify-content-start mb-3">
+                                    {/* <p className='me-2'>Profile Picture : </p> */}
+                                    <input type="file" id="picture" className="" placeholder="Profile" required />
+                                </div>
 
                                 <button className="btn btn-primary" type="submit" id='sign-up'>
                                     <span className="spinner-border spinner-border-sm mx-2 d-none"></span>
                                     Create an Account
                                 </button>
-                                <div className="divider d-flex align-items-center my-4">
+                                <div className="divider d-flex align-items-center my-2">
                                     <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                                 </div>
 
