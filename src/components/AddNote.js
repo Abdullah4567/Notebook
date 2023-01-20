@@ -47,11 +47,9 @@ const AddNote = () => {
                         <textarea className="form-control" placeholder="Enter Description" id="description" name="description" onChange={onChange} value={note.description}></textarea>
                     </div>
                 </div>
-                {/* <div className="form-check mb-3">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                </div> */}
-                <button type="" disabled={note.title.length < 3 || note.description.length < 5} className="btn btn-primary" onClick={handleClick}>Add Note</button>
+                <div className="d-grid gap-2 col-4 mx-auto">
+                    <button type="button" disabled={note.title.length < 3 || note.description.length < 5} className="btn btn-primary" onClick={handleClick}>Add Note</button>
+                </div>
             </form>
         </div >
     )

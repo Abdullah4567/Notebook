@@ -139,4 +139,6 @@ router.delete('/deletenote/:id', getUserId, async (req, res) => {
         res.status(500).json("Internal Server Error");
     }
 })
+
+
 module.exports = router;

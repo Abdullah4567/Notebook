@@ -4,7 +4,7 @@ import AlertContext from '../context/alert/AlertContext';
 import AuthContext from '../context/auth/AuthContext'
 
 const Login = () => {
-    const { setLoggedIn, validateLogin } = useContext(AuthContext);
+    const { validateLogin } = useContext(AuthContext);
     const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
@@ -16,12 +16,11 @@ const Login = () => {
             // Login Successfull
             // console.log(res.success);
             showAlert("Login Successfull", "success");
-            setLoggedIn(true);
             navigate('/')
         }
         else {
             // Login Unsuccessfull
-            setLoggedIn(false);
+            // setLoggedIn(false);
             showAlert(res.message, "danger");
             // console.log(res.message)
         }
@@ -75,7 +74,7 @@ const Login = () => {
                                 <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}>
                                     <i className="fab fa-twitter me-2"></i>Continue with Twitter</button>
                             </form>
-                            {/* <div className='p-1 mx-5 my-2 '> Dont have an Account <Link to=''>Sign Up</Link></div> */}
+                            <div className='p-1 mx-5 my-2 '> Dont have an Account <Link to='/sign-up'>Sign Up</Link></div>
                         </div>
                     </div>
                 </div >

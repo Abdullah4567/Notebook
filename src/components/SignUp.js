@@ -1,10 +1,10 @@
 import React, { useState, useContext, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import AuthContext from '../context/auth/AuthContext'
 import AlertContext from '../context/alert/AlertContext'
 
 const SignUp = () => {
-    const { setLoggedIn, createUser } = useContext(AuthContext);
+    const { createUser } = useContext(AuthContext);
     const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
@@ -17,21 +17,21 @@ const SignUp = () => {
         password = password.value.trim();
         age = age.value;
         if (name.length > 0 && password.length > 0) {
+            //displaying Loader
             const element = document.getElementById('sign-up').childNodes;
             element[0].classList.remove('d-none')
             element[1].textContent = "Loading...";
+
             const res = await createUser(name, email, password, age)
             if (res.success) {
                 // sign-up Successfull
                 // console.log(res.success);
                 showAlert("Account Created Successfully", "success");
-                setLoggedIn(true);
                 navigate('/')
             }
             else {
                 // sign-up Unsuccessfull
                 showAlert(res.message, "danger");
-                setLoggedIn(false);
                 // console.log(res.message)
             }
         }
@@ -103,8 +103,8 @@ const SignUp = () => {
                                     <i className="fab fa-twitter me-2"></i>
                                     Continue with Twitter
                                 </button>
-
                             </form>
+                            <div className='p-1 mx-5 my-2 '>Already Have an account  <Link to='/login'>Sign In</Link></div>
                         </div>
                     </div>
                 </div >

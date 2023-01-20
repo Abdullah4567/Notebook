@@ -3,7 +3,30 @@ import React, { useState } from 'react'
 import client from '../../axios/Client';
 
 const AuthState = (props) => {
-    const [LoggedIn, setLoggedIn] = useState(false)
+    const [LoggedInUser, setLoggedInUser] = useState({
+        valid: false,
+        user: null
+    })
+    // const setLoggedInUser = (name, age, email, picture) => {
+    //     if (name === "") {
+    //         setLoggedIn({
+    //             valid: false,
+    //             name: "",
+    //             age: "",
+    //             email: "",
+    //             profilePicture: null
+    //         });
+    //     } else {
+    //         setLoggedIn({
+    //             valid: true,
+    //             name: name,
+    //             age: age,
+    //             email: email,
+    //             profilePicture: picture,
+    //         })
+    //     }
+
+    // }
     const headers = {
         'content-type': 'application/json'
     }
@@ -15,7 +38,19 @@ const AuthState = (props) => {
             // console.log("data", res.data);
             if (res.data.success) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
+                const { name, age, email } = res.data
+                setLoggedInUser({
+                    valid: true,
+                    user: {
+                        name: name,
+                        age: age,
+                        email: email,
+                        profilePicture: null,
+                    }
+                })
+
             }
+            // console.log(res.data.user);
             return res.data;
         }).catch((err) => {
             // console.log("i am in catch", err.response.data)
@@ -32,6 +67,16 @@ const AuthState = (props) => {
             // console.log("data", res.data);
             if (res.data.success) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
+                setLoggedInUser({
+                    valid: true,
+                    user: {
+                        name: name,
+                        age: age,
+                        email: email,
+                        profilePicture: null,
+                    }
+                })
+
             }
             return res.data;
         }).catch((err) => {
@@ -41,10 +86,14 @@ const AuthState = (props) => {
     }
     const Logout = () => {
         localStorage.removeItem('token');
-        setLoggedIn(false);
+
+        setLoggedInUser({
+            valid: false,
+            user: null
+        })
     }
     return (
-        <AuthContext.Provider value={{ LoggedIn, setLoggedIn, validateLogin, createUser, Logout }}>
+        <AuthContext.Provider value={{ LoggedInUser, validateLogin, createUser, Logout }}>
             {props.children}
         </AuthContext.Provider >
     )

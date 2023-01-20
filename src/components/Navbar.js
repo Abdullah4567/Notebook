@@ -5,7 +5,7 @@ import AuthContext from '../context/auth/AuthContext';
 const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { LoggedIn, Logout } = useContext(AuthContext)
+    const { LoggedInUser, Logout } = useContext(AuthContext)
     useEffect(() => {
         // console.log(location);
     }, [location])
@@ -32,9 +32,9 @@ const Navbar = () => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-info mx-2" type="submit">Search</button>
-                            {LoggedIn && <button className="btn btn-primary" onClick={handleLogout}>Logout</button>}
+                            {/* <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                            <button className="btn btn-info mx-2" type="submit">Search</button> */}
+                            {LoggedInUser.valid && <button className="btn btn-primary" onClick={handleLogout}>Logout</button>}
                         </form>
                     </div>
                 </div>

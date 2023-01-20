@@ -99,7 +99,12 @@ router.post('/login', [
                 }, key)
                 return (res.status(200).json({
                     success: true,
-                    token: authToken
+                    token: authToken,
+                    user: {
+                        name: user.name,
+                        age: user.age,
+                        email: user.email
+                    }
                 }))
             }
         }
