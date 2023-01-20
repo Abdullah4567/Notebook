@@ -38,7 +38,7 @@ const AuthState = (props) => {
             // console.log("data", res.data);
             if (res.data.success) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
-                const { name, age, email } = res.data
+                const { name, age, email } = res.data.user
                 setLoggedInUser({
                     valid: true,
                     user: {
@@ -86,7 +86,6 @@ const AuthState = (props) => {
     }
     const Logout = () => {
         localStorage.removeItem('token');
-
         setLoggedInUser({
             valid: false,
             user: null

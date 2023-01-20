@@ -1,6 +1,7 @@
 import { React, useEffect, useContext } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthContext from '../context/auth/AuthContext';
+import NotFound from '../assests/NotFound.jpg'
 
 const Navbar = () => {
     const location = useLocation();
@@ -32,12 +33,11 @@ const Navbar = () => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
-                            <img src={URL.createObjectURL(LoggedInUser.user.profilePicture)} alt="" width={50} height={50} style={{ borderRadius: "50%" }} />
+                            {LoggedInUser.valid && <img src={LoggedInUser.user.profilePicture ? URL.createObjectURL(LoggedInUser.user.profilePicture) : NotFound} alt="" width={45} height={45} style={{ borderRadius: "50%" }} />}
                             {/* <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                             <button className="btn btn-info mx-2" type="submit">Search</button> */}
                             <div>
-                                {LoggedInUser.valid && <button className="btn btn-primary ms-3 mt-2 p-2 ps-3 pe-3" onClick={handleLogout}>Logout</button>}
-                                {console.log(URL.createObjectURL(LoggedInUser.user.profilePicture))}
+                                {LoggedInUser.valid && <button id="logout" className="btn btn-primary ms-3 mt-1 p-2 ps-3 pe-3" onClick={handleLogout}>Logout</button>}
                             </div>
                         </form>
                     </div>
