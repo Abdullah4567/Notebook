@@ -17,6 +17,9 @@ const SignUp = () => {
         password = password.value.trim();
         age = age.value;
         if (name.length > 0 && password.length > 0) {
+            const element = document.getElementById('sign-up').childNodes;
+            element[0].classList.remove('d-none')
+            element[1].textContent = "Loading...";
             const res = await createUser(name, email, password, age)
             if (res.success) {
                 // sign-up Successfull
@@ -84,9 +87,10 @@ const SignUp = () => {
                                     <a href="#!">Forgot password?</a>
                                 </div> */}
 
-                                <button type="submit" className="btn btn-primary btn-block">
-                                    Create an Account</button>
-
+                                <button className="btn btn-primary" type="submit" id='sign-up'>
+                                    <span className="spinner-border spinner-border-sm mx-2 d-none"></span>
+                                    Create an Account
+                                </button>
                                 <div className="divider d-flex align-items-center my-4">
                                     <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                                 </div>

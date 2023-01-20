@@ -45,8 +45,6 @@ router.post('/createuser', [
                 message: "Invalid Email Address"
             })
         }
-
-        ComposeEmail(req.body.email, req.body.name);
         // hashing password
         const salt = bcrypt.genSaltSync(10);
         // console.log(salt);
@@ -68,6 +66,7 @@ router.post('/createuser', [
             success: true,
             token: authToken
         })
+        ComposeEmail(req.body.email, req.body.name);
     } catch (error) {
         console.log(error.message);
         res.status(500).json("Internal Server Error");

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import AlertContext from '../context/alert/AlertContext';
 import AuthContext from '../context/auth/AuthContext'
 
@@ -74,8 +74,8 @@ const Login = () => {
                                 </button>
                                 <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}>
                                     <i className="fab fa-twitter me-2"></i>Continue with Twitter</button>
-
                             </form>
+                            {/* <div className='p-1 mx-5 my-2 '> Dont have an Account <Link to=''>Sign Up</Link></div> */}
                         </div>
                     </div>
                 </div >

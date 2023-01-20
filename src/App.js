@@ -18,7 +18,7 @@ function App() {
             <Routes>
               <Route exact path="/login" element={<Login />} />
               <Route exact path="/sign-up" element={<SignUp />} />
-              <Route exact path="/a" element={<Alert />} />
+              {/* <Route exact path="/a" element={<Alert />} /> */}
               {/* <Route exact path="*" element={<Error />} /> */}
               {/* for route not found use '*' */}
             </Routes>
