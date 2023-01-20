@@ -32,9 +32,13 @@ const Navbar = () => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
+                            <img src={URL.createObjectURL(LoggedInUser.user.profilePicture)} alt="" width={50} height={50} style={{ borderRadius: "50%" }} />
                             {/* <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                             <button className="btn btn-info mx-2" type="submit">Search</button> */}
-                            {LoggedInUser.valid && <button className="btn btn-primary" onClick={handleLogout}>Logout</button>}
+                            <div>
+                                {LoggedInUser.valid && <button className="btn btn-primary ms-3 mt-2 p-2 ps-3 pe-3" onClick={handleLogout}>Logout</button>}
+                                {console.log(URL.createObjectURL(LoggedInUser.user.profilePicture))}
+                            </div>
                         </form>
                     </div>
                 </div>
