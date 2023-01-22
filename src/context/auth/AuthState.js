@@ -7,26 +7,6 @@ const AuthState = (props) => {
         valid: false,
         user: null
     })
-    // const setLoggedInUser = (name, age, email, picture) => {
-    //     if (name === "") {
-    //         setLoggedIn({
-    //             valid: false,
-    //             name: "",
-    //             age: "",
-    //             email: "",
-    //             profilePicture: null
-    //         });
-    //     } else {
-    //         setLoggedIn({
-    //             valid: true,
-    //             name: name,
-    //             age: age,
-    //             email: email,
-    //             profilePicture: picture,
-    //         })
-    //     }
-
-    // }
     const headers = {
         'content-type': 'application/json'
     }
@@ -58,12 +38,15 @@ const AuthState = (props) => {
         }))
     }
     const createUser = async (name, email, password, age, picture) => {
-        return await (client.post('/auth/createuser', {
-            name: name,
-            email: email,
-            password: password,
-            age: age
-        }, { headers }).then((res) => {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('age', age);
+        formData.append('ProfilePic', picture);
+        return await (client.post('/auth/createuser', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        }).then((res) => {
             // console.log("data", res.data);
             if (res.data.success) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));

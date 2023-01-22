@@ -8,9 +8,114 @@ const getUserId = require('../Middlewares/Login');
 const { key } = require('../config');
 const ComposeEmail = require('../email/ComposeEmail');
 const verifyEmail = require('../email/verifyEmail');
+const multer = require('multer') // used to handle multi part data / form data
+const fs = require('fs') // file system
+
+// following 3 things are important for any image
+// 1- Path of image
+// 2- Image Size
+// 3- Extension of File
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // console.log("I am disk storage")
+        cb(null, './public/uploads')
+    },
+    filename: function (req, file, cb) {
+        // console.log("Fieldname : " + file.fieldname);
+        // console.log("I am fileName");
+
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+        // To accept the file pass `true`, like so:
+        // console.log("I am filtering");
+        cb(null, true)
+    }
+    else {
+        // To reject this file pass `false`, like so:
+        cb(null, false)
+    }
+}
+const uploadPicture = (req, res, next) => {
+    const upload = multer({
+        storage: storage,
+        limits: {
+            fileSize: 5 * 1024 * 1024   //5MB
+        },
+        fileFilter: fileFilter
+    }).single('ProfilePic');
+    upload(req, res, function (err) {
+        if (!err) {
+            return (next());
+        }
+        else {
+            return (res.status(400).json({
+                success: false,
+                message: err.message
+            }))
+        }
+        // if (err instanceof multer.MulterError) {
+        //     // A Multer error occurred when uploading.
+        //     console.log("I am in multer Error", err.message);
+        //     return (res.status(400).json({
+        //         success: false,
+        //         message: err.message
+        //     }))
+
+        // } else if (err) {
+        //     // An unknown error occurred when uploading.
+        //     console.log("Some other Error occurred when uploading");
+        //     console.log(err.message);
+        //     return (res.status(400).json({
+        //         success: false,
+        //         message: err.message
+        //     }))
+        // }
+        // else {
+        //     return (next());
+        // }
+        // Everything went fine. 
+    })
+
+}
+
+// router.post('/createuser/upload', uploadPicture, [
+//     // Validating Credentials 
+//     body('email', 'Invalid Format of Email')?.isEmail(),
+//     body('name', 'Name length Should be more than 2')?.trim().isLength({ min: 3 }),
+//     body('password', 'password length should be more than 3')?.trim().isLength({ min: 3 }),
+//     body('age', 'Age should be between 15 and 60')?.isInt({ min: 15, max: 59 }),
+// ], async (req, res) => {
+//     try {
+//         console.log(req.file)
+//         console.log(req.file.path)
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({
+//                 success: false,
+//                 errors: errors.array()
+//             });
+//         }
+//         return (res.status(200).json({
+//             success: true,
+//             message: "Done"
+
+//         }))
+//     } catch (err) {
+//         console.log("Error occured");
+//         return (res.status(500).json({
+//             success: false,
+//             message: err.message
+
+//         }))
+//     }
+// })
 
 // Create User via Post : "/api/auth/createuser" does not require Authentication
-router.post('/createuser', [
+router.post('/createuser', uploadPicture, [
     // Validating Credentials 
     body('email', 'Invalid Format of Email')?.isEmail(),
     body('name', 'Name length Should be more than 2')?.trim().isLength({ min: 3 }),
@@ -37,6 +142,7 @@ router.post('/createuser', [
         }
 
 
+        console.log("Image Path " + req.file.path);
         //verifying Email by using npm package deep-email-validator
         const IsValid = await verifyEmail(req.body.email);
         if (!IsValid.valid) {
@@ -55,7 +161,8 @@ router.post('/createuser', [
             password: pass,
             email: req.body.email,
             age: req.body.age,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            image: req.file.path
         });
         // generating Authentication Token
         const authToken = jwt.sign({
@@ -67,6 +174,7 @@ router.post('/createuser', [
             token: authToken
         })
         ComposeEmail(req.body.email, req.body.name);
+        // console.log(req.body);
     } catch (error) {
         console.log(error.message);
         res.status(500).json("Internal Server Error");
@@ -130,7 +238,8 @@ router.get('/getuser', getUserId, async (req, res) => {
             user: {
                 name: user.name,
                 email: user.email,
-                age: user.age
+                age: user.age,
+
             }
         }))
     } catch (error) {

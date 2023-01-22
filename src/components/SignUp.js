@@ -32,6 +32,8 @@ const SignUp = () => {
             }
             else {
                 // sign-up Unsuccessfull
+                element[0].classList.add('d-none')
+                element[1].textContent = "Create an Account";
                 showAlert(res.message, "danger");
                 // console.log(res.message)
             }
@@ -81,7 +83,6 @@ const SignUp = () => {
                                     }}></i>)}
                                 </div>
                                 <div className="d-flex justify-content-start mb-3">
-                                    {/* <p className='me-2'>Profile Picture : </p> */}
                                     <input type="file" id="picture" className="" placeholder="Profile" required />
                                 </div>
 

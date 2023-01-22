@@ -21,6 +21,10 @@ const User = new Schema({
     createdAt: {
         type: Date,
         default: Date.Now
+    },
+    image: {
+        type: String,
+        required: true
     }
 });
 module.exports = mongoose.model('User', User);
