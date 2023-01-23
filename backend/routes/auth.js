@@ -9,7 +9,8 @@ const { key } = require('../config');
 const ComposeEmail = require('../email/ComposeEmail');
 const verifyEmail = require('../email/verifyEmail');
 const multer = require('multer') // used to handle multi part data / form data
-const fs = require('fs') // file system
+const fsPromises = require('fs').promises; // file system
+const v8 = require('v8');
 
 // following 3 things are important for any image
 // 1- Path of image
@@ -82,38 +83,16 @@ const uploadPicture = (req, res, next) => {
 
 }
 
-// router.post('/createuser/upload', uploadPicture, [
-//     // Validating Credentials 
-//     body('email', 'Invalid Format of Email')?.isEmail(),
-//     body('name', 'Name length Should be more than 2')?.trim().isLength({ min: 3 }),
-//     body('password', 'password length should be more than 3')?.trim().isLength({ min: 3 }),
-//     body('age', 'Age should be between 15 and 60')?.isInt({ min: 15, max: 59 }),
-// ], async (req, res) => {
-//     try {
-//         console.log(req.file)
-//         console.log(req.file.path)
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             return res.status(400).json({
-//                 success: false,
-//                 errors: errors.array()
-//             });
-//         }
-//         return (res.status(200).json({
-//             success: true,
-//             message: "Done"
+const readFile = async (path) => {
+    const content = await fsPromises.readFile(path);
+    // console.log("Serialized File:- ");
+    // console.log("Type of Before Seialize " + typeof content);
+    const data = v8.serialize(content);
+    // console.log("Type of Data " + typeof data);
+    // console.log(v8.serialize(content));
+    return data;
 
-//         }))
-//     } catch (err) {
-//         console.log("Error occured");
-//         return (res.status(500).json({
-//             success: false,
-//             message: err.message
-
-//         }))
-//     }
-// })
-
+}
 // Create User via Post : "/api/auth/createuser" does not require Authentication
 router.post('/createuser', uploadPicture, [
     // Validating Credentials 
@@ -142,7 +121,7 @@ router.post('/createuser', uploadPicture, [
         }
 
 
-        console.log("Image Path " + req.file.path);
+        // console.log("Image Path " + req.file.path);
         //verifying Email by using npm package deep-email-validator
         const IsValid = await verifyEmail(req.body.email);
         if (!IsValid.valid) {
@@ -169,9 +148,17 @@ router.post('/createuser', uploadPicture, [
             id: user.id
         }, key)
 
+        // console.log("Path " + user.image)
         res.status(200).json({
             success: true,
-            token: authToken
+            token: authToken,
+            user: {
+                name: user.name,
+                age: user.age,
+                email: user.email,
+                image: user.image
+            }
+
         })
         ComposeEmail(req.body.email, req.body.name);
         // console.log(req.body);
@@ -201,6 +188,9 @@ router.post('/login', [
         if (user) {
             const result = await bcrypt.compare(req.body.password, user.password)
             if (result) {
+                // reading profile Image
+                const profileImage = await readFile(user.image);
+                // console.log(profileImage);
                 // generating Authentication Token
                 const authToken = jwt.sign({
                     id: user.id
@@ -211,7 +201,8 @@ router.post('/login', [
                     user: {
                         name: user.name,
                         age: user.age,
-                        email: user.email
+                        email: user.email,
+                        image: profileImage
                     }
                 }))
             }

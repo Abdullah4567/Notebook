@@ -1,8 +1,10 @@
 import AuthContext from './AuthContext';
 import React, { useState } from 'react'
 import client from '../../axios/Client';
+import { useNavigate } from 'react-router-dom';
 
 const AuthState = (props) => {
+    const navigate = useNavigate();
     const [LoggedInUser, setLoggedInUser] = useState({
         valid: false,
         user: null
@@ -17,18 +19,16 @@ const AuthState = (props) => {
         }, { headers }).then((res) => {
             // console.log("data", res.data);
             if (res.data.success) {
-                localStorage.setItem("token", JSON.stringify(res.data.token));
-                const { name, age, email } = res.data.user
-                setLoggedInUser({
-                    valid: true,
-                    user: {
-                        name: name,
-                        age: age,
-                        email: email,
-                        profilePicture: null,
-                    }
-                })
 
+                const user = {
+                    valid: true,
+                    token: res.data.token,
+                    ...res.data.user,
+                }
+                localStorage.setItem("user", JSON.stringify(user));
+                setLoggedInUser({
+                    ...user
+                });
             }
             // console.log(res.data.user);
             return res.data;
@@ -37,28 +37,28 @@ const AuthState = (props) => {
             return err.response.data;
         }))
     }
-    const createUser = async (name, email, password, age, picture) => {
+    const createUser = async (name, email, password, age, image) => {
         const formData = new FormData();
         formData.append('name', name);
         formData.append('email', email);
         formData.append('password', password);
         formData.append('age', age);
-        formData.append('ProfilePic', picture);
+        formData.append('ProfilePic', image);
         return await (client.post('/auth/createuser', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         }).then((res) => {
             // console.log("data", res.data);
             if (res.data.success) {
-                localStorage.setItem("token", JSON.stringify(res.data.token));
-                setLoggedInUser({
+                const user = {
                     valid: true,
-                    user: {
-                        name: name,
-                        age: age,
-                        email: email,
-                        profilePicture: picture,
-                    }
-                })
+                    token: res.data.token,
+                    ...res.data.user,
+                }
+                localStorage.setItem("user", JSON.stringify(user));
+                setLoggedInUser({
+                    ...user
+                });
+                // console.log(LoggedInUser);
 
             }
             return res.data;
@@ -68,14 +68,29 @@ const AuthState = (props) => {
         }))
     }
     const Logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setLoggedInUser({
             valid: false,
             user: null
         })
     }
+
+    const AuthenticateUser = () => {
+        if (localStorage.getItem('user') === null) {
+            setLoggedInUser({
+                valid: false
+            })
+            navigate('/login')
+        }
+        else {
+            const user = JSON.parse(localStorage.getItem('user'));
+            setLoggedInUser({
+                ...user
+            })
+        }
+    }
     return (
-        <AuthContext.Provider value={{ LoggedInUser, validateLogin, createUser, Logout }}>
+        <AuthContext.Provider value={{ LoggedInUser, setLoggedInUser, validateLogin, createUser, Logout, AuthenticateUser }}>
             {props.children}
         </AuthContext.Provider >
     )

@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react'
 import NotesLayout from '../layouts/NotesLayout'
+import context from '../context/auth/AuthContext'
 const About = () => {
-    const navigate = useNavigate();
+    const { AuthenticateUser } = useContext(context)
     useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            navigate('/login')
-        }
+        AuthenticateUser();
         // eslint-disable-next-line
     }, [])
     return (

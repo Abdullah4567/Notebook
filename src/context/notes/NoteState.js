@@ -9,7 +9,7 @@ const NoteState = (props) => {
         'Content-Type': 'application/json',
     }
     const addNewNote = async (note) => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         return (await client.post('/notes/addnote', {
             title: note.title,
             description: note.description
@@ -23,7 +23,7 @@ const NoteState = (props) => {
         }))
     }
     const deleteNote = async (id) => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         return (await client.delete(`notes/deletenote/${id}`, { headers }).then((res) => {
             const newNotes = notes.filter((note) => {
                 return note._id !== id
@@ -39,7 +39,7 @@ const NoteState = (props) => {
     }
 
     const updateNote = async (targetNote) => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         return (await client.put(`notes/updatenote/${targetNote.id}`, {
             title: targetNote.title,
             description: targetNote.description
@@ -53,7 +53,7 @@ const NoteState = (props) => {
 
     }
     const markAsImportant = (id) => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         const newNotes = notes.filter((note) => {
             return note._id !== id
         })
@@ -64,7 +64,7 @@ const NoteState = (props) => {
         setnotes(newNotes);
     }
     const markAsOrdinary = (id) => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         const newNotes = notes.filter((note) => {
             return note._id !== id
         })
@@ -75,7 +75,7 @@ const NoteState = (props) => {
         setnotes(newNotes);
     }
     const fetchNotes = async () => {
-        headers['auth-token'] = JSON.parse(localStorage.getItem('token'));
+        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         return (await client.get('/notes/allnotes', {
             headers
         }).then((res) => {
