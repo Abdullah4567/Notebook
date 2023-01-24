@@ -11,6 +11,7 @@ const verifyEmail = require('../email/verifyEmail');
 const multer = require('multer') // used to handle multi part data / form data
 const fsPromises = require('fs').promises; // file system
 const v8 = require('v8');
+const { imageUrl } = require('../config');
 
 // following 3 things are important for any image
 // 1- Path of image
@@ -20,12 +21,13 @@ const v8 = require('v8');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // console.log("I am disk storage")
-        cb(null, './public/uploads')
+        cb(null, 'images')
     },
     filename: function (req, file, cb) {
         // console.log("Fieldname : " + file.fieldname);
         // console.log("I am fileName");
 
+        // `\`
         cb(null, Date.now() + '-' + file.originalname)
     }
 })
@@ -82,17 +84,6 @@ const uploadPicture = (req, res, next) => {
     })
 
 }
-
-const readFile = async (path) => {
-    const content = await fsPromises.readFile(path);
-    // console.log("Serialized File:- ");
-    // console.log("Type of Before Seialize " + typeof content);
-    const data = v8.serialize(content);
-    // console.log("Type of Data " + typeof data);
-    // console.log(v8.serialize(content));
-    return data;
-
-}
 // Create User via Post : "/api/auth/createuser" does not require Authentication
 router.post('/createuser', uploadPicture, [
     // Validating Credentials 
@@ -134,6 +125,7 @@ router.post('/createuser', uploadPicture, [
         const salt = bcrypt.genSaltSync(10);
         // console.log(salt);
         const pass = await bcrypt.hash(req.body.password, salt);
+        console.log("File " + req.file.filename);
         // creating a new user 
         user = await User.create({
             name: req.body.name,
@@ -141,14 +133,12 @@ router.post('/createuser', uploadPicture, [
             email: req.body.email,
             age: req.body.age,
             createdAt: Date.now(),
-            image: req.file.path
+            image: req.file.filename
         });
         // generating Authentication Token
         const authToken = jwt.sign({
             id: user.id
         }, key)
-
-        // console.log("Path " + user.image)
         res.status(200).json({
             success: true,
             token: authToken,
@@ -156,9 +146,8 @@ router.post('/createuser', uploadPicture, [
                 name: user.name,
                 age: user.age,
                 email: user.email,
-                image: user.image
+                image: `${imageUrl + user.image}`
             }
-
         })
         ComposeEmail(req.body.email, req.body.name);
         // console.log(req.body);
@@ -188,9 +177,6 @@ router.post('/login', [
         if (user) {
             const result = await bcrypt.compare(req.body.password, user.password)
             if (result) {
-                // reading profile Image
-                const profileImage = await readFile(user.image);
-                // console.log(profileImage);
                 // generating Authentication Token
                 const authToken = jwt.sign({
                     id: user.id
@@ -202,7 +188,7 @@ router.post('/login', [
                         name: user.name,
                         age: user.age,
                         email: user.email,
-                        image: profileImage
+                        image: `${imageUrl + user.image}`
                     }
                 }))
             }

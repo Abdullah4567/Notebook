@@ -73,6 +73,7 @@ const AuthState = (props) => {
             valid: false,
             user: null
         })
+        navigate('/login');
     }
 
     const AuthenticateUser = () => {

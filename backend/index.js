@@ -9,8 +9,9 @@ app.use(cors())
 // const port = 5000;
 app.use(express.json()); // middleware for use of json
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+// app.use(express.urlencoded({ extended: true }));
+app.use("/images", express.static("images"));
+app.use(express.static("public"));
 
 //Available  Routes
 app.use('/api/auth', require('./routes/auth'));

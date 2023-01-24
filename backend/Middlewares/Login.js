@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
-const KEY = "A quick brown fox jumps over the lazy dog"
+const { key } = require('../config');
 const getUserId = (req, res, next) => {
 
     try {
         const token = req.header('auth-token');
         // console.log("In backend ", token);
         if (token) {
-            const userId = jwt.verify(token, KEY);
+            const userId = jwt.verify(token, key);
             req.userId = userId;
             return (next());
         }
