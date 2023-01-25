@@ -37,7 +37,6 @@ const NoteState = (props) => {
         }))
 
     }
-
     const updateNote = async (targetNote) => {
         headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
         return (await client.put(`notes/updatenote/${targetNote.id}`, {
@@ -75,17 +74,21 @@ const NoteState = (props) => {
         setnotes(newNotes);
     }
     const fetchNotes = async () => {
-        headers['auth-token'] = (JSON.parse(localStorage.getItem('user'))).token;
-        return (await client.get('/notes/allnotes', {
-            headers
-        }).then((res) => {
-            // console.log(res.data.notes);
-            setnotes(res.data.notes);
-            return res.data;
-        }).catch((err) => {
-            console.log(err.response)
-            return err.response.data
-        }))
+        let user = localStorage.getItem('user');
+        if (user) {
+            user = JSON.parse(user);
+            headers['auth-token'] = user.token;
+            return (await client.get('/notes/allnotes', {
+                headers
+            }).then((res) => {
+                // console.log(res.data.notes);
+                setnotes(res.data.notes);
+                return res.data;
+            }).catch((err) => {
+                console.log(err.response)
+                return err.response.data
+            }))
+        }
     }
     return (
         <NoteContext.Provider value={{ notes, addNewNote, deleteNote, markAsImportant, markAsOrdinary, fetchNotes, updateNote }}>
