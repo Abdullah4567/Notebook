@@ -1,9 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import AuthContext from '../context/auth/AuthContext'
 import AlertContext from '../context/alert/AlertContext'
-import { GoogleLogin } from 'react-google-login';
-import { gapi } from 'gapi-script';
 
 const SignUp = () => {
     const { createUser } = useContext(AuthContext);
@@ -11,16 +9,6 @@ const SignUp = () => {
     const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false);
-    const clientId = process.env.REACT_APP_CLIENT_ID;
-    useEffect(() => {
-        const initClient = () => {
-            gapi.client.init({
-                clientId: clientId,
-                scope: 'email profile openid'
-            });
-        };
-        gapi.load('client:auth2', initClient);
-    });
     const handleSubmit = async (e) => {
         e.preventDefault();
         let { name, email, password, age, picture } = e.target;
@@ -54,12 +42,6 @@ const SignUp = () => {
             showAlert("Name or password should of minimum 3 characters", "danger")
         }
     }
-    // const responseSuccessGoogle = (res) => {
-    //     console.log("Success ", res);
-    // }
-    // const responseFailtureGoogle = (res) => {
-    //     console.log("Failure ", res);
-    // }
     return (
         <div>
             <section className="">
@@ -101,47 +83,27 @@ const SignUp = () => {
                                     }}></i>)}
                                 </div>
                                 <div className="d-flex justify-content-start mb-3">
-                                    <input type="file" id="picture" className="" placeholder="Profile" required />
+                                    <input type="file" id="picture" className="" placeholder="Profile" accept="image/jpeg,image/png" required />
                                 </div>
-
-                                <button className="btn btn-primary" type="submit" id='sign-up'>
-                                    <span className="spinner-border spinner-border-sm mx-2 d-none"></span>
-                                    Create an Account
-                                </button>
+                                <div className="d-flex justify-content-center">
+                                    <button className="btn btn-primary" type="submit" id='sign-up'>
+                                        <span className="spinner-border spinner-border-sm mx-2 d-none"></span>
+                                        Create an Account
+                                    </button>
+                                </div>
                                 <div className="divider d-flex align-items-center my-2">
                                     <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                                 </div>
 
-                                <button className="btn btn-primary mx-1" style={{ "backgroundColor": "#3b5998" }}
+                                {/* <button className="btn btn-primary mx-1" style={{ "backgroundColor": "#3b5998" }}
                                 >
                                     <i className="fab fa-facebook-f me-2"></i>Continue with Facebook
                                 </button>
                                 <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}>
                                     <i className="fab fa-twitter me-2"></i>
                                     Continue with Twitter
-                                </button>
+                                </button> */}
                             </form>
-                            <GoogleLogin
-                                cookiePolicy={'single_host_origin'}
-                                prompt="select_account"
-                                className='btn btn-primary'
-                                clientId={clientId}
-                                buttonText="Sign in with Google"
-                                theme='dark'
-                                onSuccess={(res) => {
-                                    console.log("Success");
-                                    console.log(res)
-                                }}
-                                onFailure={(res) => {
-                                    console.log("Failure");
-                                    console.log(res)
-                                }}
-                                render={renderProps => (
-                                    <button className='btn btn-primary' onClick={renderProps.onClick} style={{
-                                        "backgroundColor": "#4285F4"
-                                    }}><i className="fa-brands fa-google me-1"></i>Continue with Google</button>
-                                )}
-                            />
                             <div className='p-1 mx-5 my-2 '>Already Have an account  <Link to='/login'>Sign In</Link></div>
                         </div>
                     </div>

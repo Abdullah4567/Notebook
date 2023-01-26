@@ -1,14 +1,45 @@
-import React, { useState, useContext, useRef } from 'react'
+import React, { useState, useContext, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import AlertContext from '../context/alert/AlertContext';
 import AuthContext from '../context/auth/AuthContext'
+import { GoogleLogin } from 'react-google-login';
+import { gapi } from 'gapi-script';
 
 const Login = () => {
-    const { validateLogin } = useContext(AuthContext);
+    const { validateLogin, LoginWithGoogle } = useContext(AuthContext);
     const { showAlert } = useContext(AlertContext)
     const ref = useRef();
     const navigate = useNavigate();
     const [showPassword, setshowPassword] = useState(false)
+    const clientId = process.env.REACT_APP_CLIENT_ID;
+    useEffect(() => {
+        const initClient = () => {
+            gapi.client.init({
+                clientId: clientId,
+                scope: 'email profile openid'
+            });
+        };
+        gapi.load('client:auth2', initClient);
+    });
+    const responseSuccessGoogle = async (response) => {
+        // console.log(response);
+        const res = await LoginWithGoogle(response.tokenId, response.accessToken, response.googleId)
+        if (res.success) {
+            // sign-up Successfull
+            // console.log(res.success);
+            showAlert("Logged In", "success");
+            navigate('/')
+        }
+        else {
+            // sign-up Unsuccessfull
+            showAlert(res.message, "danger");
+            // console.log(res.message)
+        }
+    }
+    const responseFailtureGoogle = (response) => {
+        console.log("Failure ", response);
+        showAlert("Logged In Failed", "danger");
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         const res = await validateLogin(e.target.email.value, e.target.password.value)
@@ -67,12 +98,34 @@ const Login = () => {
                                     <p className="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
                                 </div>
 
-                                <button className="btn btn-primary mx-1" style={{ "backgroundColor": "#3b5998" }}
+                                {/* <button className="btn btn-primary mx-1" style={{ "backgroundColor": "#3b5998" }}
                                 >
                                     <i className="fab fa-facebook-f me-2"></i>Continue with Facebook
                                 </button>
                                 <button className=" btn btn-primary" style={{ "backgroundColor": "#55acee" }}>
-                                    <i className="fab fa-twitter me-2"></i>Continue with Twitter</button>
+                                    <i className="fab fa-twitter me-2"></i>Continue with Twitter</button> */}
+                                <div className='d-flex justify-content-around'>
+                                    <GoogleLogin
+                                        cookiePolicy={'single_host_origin'}
+                                        prompt="select_account"
+                                        className='btn btn-primary'
+                                        clientId={clientId}
+                                        buttonText="Sign in with Google"
+                                        theme='dark'
+                                        scope='https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read https://www.googleapis.com/auth/userinfo.profile'
+                                        onSuccess={(res) => {
+                                            responseSuccessGoogle(res);
+                                        }}
+                                        onFailure={(res) => {
+                                            responseFailtureGoogle(res);
+                                        }}
+                                        render={renderProps => (
+                                            <button className='btn btn-primary' onClick={renderProps.onClick} style={{
+                                                "backgroundColor": "#4285F4"
+                                            }}><i className="fa-brands fa-google me-1"></i>Continue with Google</button>
+                                        )}
+                                    />
+                                </div>
                             </form>
                             <div className='p-1 mx-5 my-2 '> Dont have an Account <Link to='/sign-up'>Sign Up</Link></div>
                         </div>

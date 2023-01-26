@@ -7,6 +7,8 @@ module.exports = {
     password: process.env.PASSWORD,
     dbUrl: process.env.DB_URL,
     dbName: process.env.DB_NAME,
-    imageUrl: process.env.Image_Url
+    imageUrl: process.env.Image_Url,
+    clientID: process.env.CLIENT_ID,
+    dummyPassword: process.env.DUMMY_PASSWORD
 
 }

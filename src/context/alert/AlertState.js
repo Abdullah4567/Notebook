@@ -26,7 +26,7 @@ const AlertState = (props) => {
         setalert({
             show: false,
             message: "",
-            delay: 1500,
+            delay: 2000,
             icons: null,
             type: null
         });

@@ -90,8 +90,32 @@ const AuthState = (props) => {
             })
         }
     }
+    const LoginWithGoogle = async (tokenId, accessToken, googleId) => {
+        return await (client.post("/auth/login-with-google", {
+            tokenId: tokenId,
+            accessToken: accessToken,
+            googleId: googleId
+        }).then((res) => {
+            if (res.data.success) {
+                const user = {
+                    valid: true,
+                    token: res.data.token,
+                    ...res.data.user,
+                }
+                localStorage.setItem("user", JSON.stringify(user));
+                setLoggedInUser({
+                    ...user
+                });
+            }
+            return res.data;
+        }).catch((err) => {
+            console.log(err.response.data)
+            return err.response.data;
+        })
+        )
+    }
     return (
-        <AuthContext.Provider value={{ LoggedInUser, setLoggedInUser, validateLogin, createUser, Logout, AuthenticateUser }}>
+        <AuthContext.Provider value={{ LoggedInUser, setLoggedInUser, validateLogin, createUser, Logout, AuthenticateUser, LoginWithGoogle }}>
             {props.children}
         </AuthContext.Provider >
     )

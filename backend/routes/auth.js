@@ -9,9 +9,12 @@ const { key } = require('../config');
 const ComposeEmail = require('../email/ComposeEmail');
 const verifyEmail = require('../email/verifyEmail');
 const multer = require('multer') // used to handle multi part data / form data
-const fsPromises = require('fs').promises; // file system
-const v8 = require('v8');
-const { imageUrl } = require('../config');
+// const fsPromises = require('fs').promises; // file system
+// const v8 = require('v8');
+const { imageUrl, clientID, dummyPassword } = require('../config');
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(clientID)
+const axios = require('axios')
 
 // following 3 things are important for any image
 // 1- Path of image
@@ -202,6 +205,83 @@ router.post('/login', [
         res.status(500).json("Internal Server Error");
     }
 })
+
+// Login with Google : post  "/api/auth/login-with-google"  not login required
+router.post("/login-with-google", async (req, res) => {
+    try {
+        if ("tokenId" in req.body && "accessToken" in req.body && "googleId" in req.body) {
+            const { tokenId, accessToken, googleId } = req.body;
+            client.verifyIdToken({ idToken: tokenId, audience: clientID })
+                .then(async (response) => {
+                    // console.log(response);
+                    const { name, email, email_verified, picture } = response.payload;
+                    if (email_verified) {
+
+                        // If user already Exist
+                        let user = await User.findOne({ email: email });
+                        let userExist = true;
+                        if (!user) {
+
+                            const salt = bcrypt.genSaltSync(10);
+                            // console.log(salt);
+                            const pass = await bcrypt.hash(dummyPassword, salt);
+                            // Creating a new User
+                            user = await User.create({
+                                name: name,
+                                password: pass,
+                                email: email,
+                                age: 22,
+                                // age is hardcoded here. You can get it by hitting google api again.
+                                createdAt: Date.now(),
+                                image: picture
+                            });
+                            userExist = false;
+                        }
+                        // generating Authentication Token
+                        const authToken = jwt.sign({
+                            id: user.id
+                        }, key)
+                        res.status(200).json({
+                            success: true,
+                            token: authToken,
+                            user: {
+                                name: user.name,
+                                age: user.age,
+                                email: user.email,
+                                image: user.image
+                            }
+                        })
+                        if (!userExist) {
+                            ComposeEmail(email, name);
+                        }
+                    }
+                    else {
+                        res.status(400).json({
+                            success: false,
+                            message: "Account not verified"
+                        })
+                    }
+
+                }).catch((err) => {
+                    console.log(err)
+                    res.status(400).json({
+                        success: false,
+                        message: "Invalid TokenId"
+                    })
+                })
+        }
+        else {
+            res.status(400).json({
+                success: false,
+                message: "Invalid Request"
+            })
+        }
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json("Internal Server Error");
+    }
+})
+
 
 // GetUserData  via Get : "/api/auth/getuser"   login required
 router.get('/getuser', getUserId, async (req, res) => {
