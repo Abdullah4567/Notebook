@@ -9,6 +9,9 @@ module.exports = {
     dbName: process.env.DB_NAME,
     imageUrl: process.env.Image_Url,
     clientID: process.env.CLIENT_ID,
-    dummyPassword: process.env.DUMMY_PASSWORD
+    dummyPassword: process.env.DUMMY_PASSWORD,
+    cloudName: process.env.CLOUD_NAME,
+    apiKey: process.env.API_KEY,
+    apiSecret: process.env.API_SECRET
 
 }

@@ -14,7 +14,7 @@ const multer = require('multer') // used to handle multi part data / form data
 const { imageUrl, clientID, dummyPassword } = require('../config');
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(clientID)
-const axios = require('axios')
+const cloudinary = require('../storage/cloudinary')
 
 // following 3 things are important for any image
 // 1- Path of image
@@ -129,6 +129,8 @@ router.post('/createuser', uploadPicture, [
         // console.log(salt);
         const pass = await bcrypt.hash(req.body.password, salt);
         console.log("File " + req.file.filename);
+        //uploading Picture to Cloudinary
+        const result = await cloudinary.v2.uploader.upload(req.file.path, { folder: "NoteBook" });
         // creating a new user 
         user = await User.create({
             name: req.body.name,
@@ -152,6 +154,7 @@ router.post('/createuser', uploadPicture, [
                 image: `${imageUrl + user.image}`
             }
         })
+        console.log(result);
         ComposeEmail(req.body.email, req.body.name);
         // console.log(req.body);
     } catch (error) {
